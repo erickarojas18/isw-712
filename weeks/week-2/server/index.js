@@ -10,19 +10,20 @@ app.use(bodyParser.json());
 
 // check for cors
 const cors = require("cors");
-const { teacherGet, teacherPost, teacherPatch, teacherDelete } = require('./controllers/teacherController');
 app.use(cors({
   domains: '*',
   methods: "*"
 }));
 
+const { teacherGet, teacherPost, teacherPatch, teacherDelete } = require('./controllers/teacherController');
+
 
 // listen to the task request
-app.get("/api/teachers/",teacherGet);
 app.post("/api/teachers", teacherPost);
-app.patch("/api/teachers", teacherPatch);
-app.put("/api/teachers", teacherPatch);
-app.delete("/api/teachers", teacherDelete);
+app.get("/api/teachers/",teacherGet);
+// app.patch("/api/teachers", teacherPatch);
+// app.put("/api/teachers", teacherPatch);
+// app.delete("/api/teachers", teacherDelete);
 
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))

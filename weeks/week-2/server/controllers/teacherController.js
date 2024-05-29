@@ -10,24 +10,25 @@ const teacherPost = (req, res) => {
   let teacher = new Teacher();
 
   teacher.first_name = req.body.first_name;
-  teacher.last_name  = req.body.last_name;
+  teacher.last_name = req.body.last_name;
   teacher.cedula = req.body.cedula;
   teacher.age = req.body.age;
 
   if (teacher.first_name && teacher.last_name) {
-    teacher.save(function (err) {
-      if (err) {
+    teacher.save()
+      .then(() => {
+        res.status(201); // CREATED
+        res.header({
+          'location': `/api/teachers/?id=${teacher.id}`
+        });
+        res.json(teacher);
+      })
+      .catch((err) => {
         res.status(422);
         console.log('error while saving the teacher', err);
         res.json({
           error: 'There was an error saving the teacher'
         });
-      }
-      res.status(201); // CREATED
-      res.header({
-        'location': `/api/teachers/?id=${teacher.id}`
-      });
-      res.json(teacher);
     });
   } else {
     res.status(422);
@@ -47,24 +48,25 @@ const teacherPost = (req, res) => {
 const teacherGet = (req, res) => {
   // if an specific teacher is required
   if (req.query && req.query.id) {
-    Teacher.findById(req.query.id, function (err, teacher) {
-      if (err) {
+    Teacher.findById(req.query.id)
+      .then(teacher => {
+        res.json(teacher);
+      })
+      .catch( () => {
         res.status(404);
         console.log('error while queryting the teacher', err)
         res.json({ error: "Teacher doesnt exist" })
-      }
-      res.json(teacher);
-    });
+      });
   } else {
     // get all teachers
-    Teacher.find(function (err, teachers) {
-      if (err) {
+    Teacher.find()
+      .then(teachers => {
+        res.json(teachers);
+      })
+      .catch(err => {
         res.status(422);
         res.json({ "error": err });
-      }
-      res.json(teachers);
-    });
-
+      });
   }
 };
 
@@ -115,7 +117,7 @@ const teacherPatch = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
- const teacherDelete = (req, res) => {
+const teacherDelete = (req, res) => {
   // get teacher by id
   if (req.query && req.query.id) {
     Teacher.findById(req.query.id, function (err, teacher) {
