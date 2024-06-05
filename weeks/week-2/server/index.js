@@ -21,9 +21,9 @@ const { teacherGet, teacherPost, teacherPatch, teacherDelete } = require('./cont
 // listen to the task request
 app.post("/api/teachers", teacherPost);
 app.get("/api/teachers/",teacherGet);
-// app.patch("/api/teachers", teacherPatch);
-// app.put("/api/teachers", teacherPatch);
-// app.delete("/api/teachers", teacherDelete);
+app.patch("/api/teachers", teacherPatch);
+app.put("/api/teachers", teacherPatch);
+app.delete("/api/teachers", teacherDelete);
 
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
