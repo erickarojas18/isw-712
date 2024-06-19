@@ -27,8 +27,6 @@ const {
   coursePost, courseGet
 } = require("./controllers/courseController.js");
 
-const {createImage}  = require("./controllers/openAiController.js");
-
 // parser for the request body (required for the POST and PUT methods)
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -44,7 +42,7 @@ app.use(cors({
 // login token based
 app.post("/api/session", function (req, res, next) {
   if (req.body.username && req.body.password ) {
-    // validate user
+    // validate user in the database
     if(req.body.username === 'admin' && req.body.password === 'password') {
       const session = saveSession(req.body.username);
       session.then(function(session){
@@ -137,15 +135,12 @@ app.use(function (req, res, next) {
   }
 });
 
-
-
 // listen to the task request
 app.get("/api/teachers", teacherGet);
 app.post("/api/teachers", teacherPost);
 app.patch("/api/teachers", teacherPatch);
 app.put("/api/teachers", teacherPatch);
 app.delete("/api/teachers", teacherDelete);
-app.post("/api/image", createImage);
 // course
 app.get("/api/courses", courseGet);
 app.post("/api/courses", coursePost);
