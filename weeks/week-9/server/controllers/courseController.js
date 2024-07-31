@@ -1,4 +1,4 @@
-const courseModel = require("../models/courseModel");
+const Course = require("../models/courseModel");
 
 /**
  * Get all courses or one
@@ -24,7 +24,7 @@ const courseModel = require("../models/courseModel");
  * @param {*} res
  */
 const courseGetAll = (req, res) => {
-  return courseModel.find((error, courses) => {
+  return Course.find((error, courses) => {
     if (error) {
       console.log('there was an error', error);
       return error;
@@ -40,7 +40,7 @@ const courseGetAll = (req, res) => {
  * @param {*} res
  */
 const courseSearch = (params) => {
-  return courseModel.find(
+  return Course.find(
     {
       "name": { $regex: `${params.name}`, $options: 'i' }
     }, (error, courses) => {
@@ -52,7 +52,19 @@ const courseSearch = (params) => {
   }).populate('teacher').exec();
 };
 
+
+const addCourse = (req) => {
+  console.log('req:', req);
+  const course = new Course();
+  course.name = req.name;
+  course.credit = req.credit;
+
+  course.save();
+  return course;
+}
+
 module.exports = {
   courseGetAll,
-  courseSearch
+  courseSearch,
+  addCourse
 }

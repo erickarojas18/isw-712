@@ -7,6 +7,10 @@ exports.graphQLschema = buildSchema(`
     version: String
   }
 
+  type Mutation {
+    createCourse(input: CreateCourseInput!): Course
+  }
+
   type Course {
     _id: ID!
     name: String,
@@ -22,4 +26,8 @@ exports.graphQLschema = buildSchema(`
     age: Int
   }
 
-  `);
+  input CreateCourseInput {
+    name: String!
+    credits: Int!
+  }
+`);

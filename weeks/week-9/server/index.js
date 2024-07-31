@@ -16,7 +16,8 @@ const db = mongoose.connect(process.env.DB_CONNECTION_STRING, {
 const theSecretKey = process.env.JWT_SECRET;
 
 const {
-   courseGetAll, courseSearch
+   courseGetAll, courseSearch,
+   addCourse
 } = require("./controllers/courseController.js");
 
 // parser for the request body (required for the POST and PUT methods)
@@ -30,6 +31,7 @@ const teacherModel = require('./models/teacherModel.js');
 const graphqlResolvers = {
   getAllCourses: courseGetAll,
   searchCourses: (params) => courseSearch(params),
+  createCourse: (req) => addCourse(req),
   hello: function() { return "Hola Mundo"},
   version: function() {return "1.0"}
 };
@@ -74,7 +76,7 @@ app.use(cors({
 app.use('/graphql', graphqlHTTP({
   schema: graphQLschema,
   rootValue: graphqlResolvers,
-  graphiql: true,
+  graphiql: true
 }));
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
