@@ -40,6 +40,7 @@ const courseGetAll = (req, res) => {
  * @param {*} res
  */
 const courseSearch = (params) => {
+  console.log('params', params);
   return courseModel.find(
     {
       "name": { $regex: `${params.name}`, $options: 'i' }

@@ -36,6 +36,7 @@ const graphqlResolvers = {
 
 // Middlewares
 app.use(bodyParser.json());
+
 // check for cors
 app.use(cors({
   domains: '*',
