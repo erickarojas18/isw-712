@@ -27,24 +27,6 @@
   <h3>Results:</h3>
   <div id="result"></div>
 
-  <select name="countries" id="countries">
-  </select>
-
-  <script>
-    const ajaxRequest = new XMLHttpRequest(); //AJAX
-    ajaxRequest.addEventListener("load", (e) => {
-
-      const countries = JSON.parse(e.target.responseText);
-      let optionsHtml = "";
-      countries.forEach(country => {
-        optionsHtml += `<option value="${country.cca3}">${country.name.common}</option>`;
-      });
-      document.getElementById("countries").innerHTML = optionsHtml;
-    });
-    ajaxRequest.addEventListener("error", ()=>{});
-    ajaxRequest.open("GET", "https://restcountries.com/v3.1/all");
-    ajaxRequest.send();
-  </script>
 </body>
 
 </html>

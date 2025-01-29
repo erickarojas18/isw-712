@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors({
   domains: '*',
-  methods: "*"
+  methods: '*'
 }));
 
 //routes
