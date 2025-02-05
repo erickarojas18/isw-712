@@ -6,27 +6,32 @@
   <title>Week 1 - Consume API</title>
   <script>
     const completed = (response) => {
-      const data = JSON.parse(response.target.responseText);
-      document.getElementById('result').innerHTML = `Tipo de Cambio Dolares Compra: ${data.TipoCompraDolares}`;
+      const data = response.target.responseText;
+      document.getElementById('result').innerHTML = data;
     };
 
     const error = () => console.log(this.responseText);
 
     function getExchange() {
+      const currency = document.getElementById('type').value;
       const ajaxRequest = new XMLHttpRequest(); //AJAX
       ajaxRequest.addEventListener("load", completed);
       ajaxRequest.addEventListener("error", error);
-      ajaxRequest.open("GET", "http://localhost:3001/tipocambio");
+      ajaxRequest.open("GET", `http://localhost:3001/tipocambio?type=${currency}`);
       ajaxRequest.send();
     }
   </script>
 </head>
 
 <body>
+  <select id="type">
+    <option value="all">All</option>
+    <option value="eur">Euro</option>
+    <option value="usd">US Dollar</option>
+  </select>
   <button onclick="getExchange();">Tipo de Cambio</button>
   <h3>Results:</h3>
   <div id="result"></div>
-
 </body>
 
 </html>
