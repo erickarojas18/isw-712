@@ -18,6 +18,6 @@ app.use(cors({
 
 
 app.post('/teachers', teacherCreate);
-app.get("/teachers/",teacherGet);
+app.get("/teachers",teacherGet);
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))

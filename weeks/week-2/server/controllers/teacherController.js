@@ -15,7 +15,8 @@ const teacherCreate = (req, res) => {
   teacher.cedula = req.body.cedula;
 
   if (teacher.first_name && teacher.last_name) {
-    teacher.save().then(() => {
+    teacher.save()
+      .then(() => {
         res.status(201); // CREATED
         res.header({
           'location': `/teachers/?id=${teacher.id}`
