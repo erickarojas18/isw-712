@@ -37,26 +37,6 @@ app.use(cors({
 }));
 
 
-// // Auth basic http
-// app.use(function (req, res, next) {
-//   if (req.headers["authorization"]) {
-//     const authBase64 = req.headers['authorization'].split(' ');
-//     const userPass = base64decode(authBase64[1]);
-//     const user = userPass.split(':')[0];
-//     const password = userPass.split(':')[1];
-
-//     if (user === 'admin' && password == '1234') {
-//       // saveSession('admin');
-//       next();
-//       return;
-//     }
-//   }
-//   res.status(401);
-//   res.send({
-//     error: "Unauthorized"
-//   });
-// });
-
 // login token based
 app.post("/api/session", function (req, res, next) {
   if (req.body.username && req.body.password ) {
@@ -129,6 +109,7 @@ app.use(function (req, res, next) {
     });
   }
 });
+
 
 // listen to the task request
 app.get("/api/teachers", teacherGet);

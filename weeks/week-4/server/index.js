@@ -29,7 +29,6 @@ app.use(bodyParser.json());
 const cors = require("cors");
 
 // Middlewares
-
 app.use(cors({
   domains: '*',
   methods: "*"

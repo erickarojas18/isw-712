@@ -28,6 +28,14 @@ async function getTeachers() {
   }
 }
 
+async function login() {
+  const user = document.getElementById('user').value;
+  const password = document.getElementById('password').value;
+  const auth = btoa(`${user}:${password}`);
+  sessionStorage.setItem('token', auth);
+
+}
+
 async function createTeacher() {
   let teacher =  {
     first_name: document.getElementById('first_name').value,
@@ -35,12 +43,12 @@ async function createTeacher() {
     cedula: document.getElementById('cedula').value,
     age: document.getElementById('age').value
   }
-
+  const authkey = sessionStorage.getItem('token');
   const response = await fetch("http://localhost:3001/api/teachers",{
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic x'
+      'Authorization': `Basic ${authkey}`
     },
     body: JSON.stringify(teacher)
   });
