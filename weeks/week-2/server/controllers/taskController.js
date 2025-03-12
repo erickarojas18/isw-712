@@ -1,114 +1,69 @@
 const Task = require("../models/taskModel");
 
-/**
- * Creates a task
- *
- * @param {*} req
- * @param {*} res
- */
 const taskPost = (req, res) => {
-  var task = new Task();
+  const task = new Task({
+    title: req.body.title,
+    detail: req.body.detail
+  });
 
-  task.title = req.body.title;
-  task.detail = req.body.detail;
-
-  if (task.title && task.detail) {
-    task.save(function (err) {
-      if (err) {
-        res.status(422);
-        console.log('error while saving the task', err)
-        res.json({
-          error: 'There was an error saving the task'
-        });
-      }
-      res.status(201);//CREATED
-      res.header({
-        'location': `http://localhost:3000/api/tasks/?id=${task.id}`
-      });
-      res.json(task);
-    });
-  } else {
-    res.status(422);
-    console.log('error while saving the task')
-    res.json({
-      error: 'No valid data provided for task'
-    });
+  if (!task.title || !task.detail) {
+    return res.status(422).json({ error: 'No valid data provided for task' });
   }
+
+  task.save()
+    .then(() => {
+      res.status(201).json(task);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: "Internal server error" });
+    });
 };
 
-/**
- * Get all tasks
- *
- * @param {*} req
- * @param {*} res
- */
 const taskGet = (req, res) => {
-  // if an specific task is required
-  if (req.query && req.query.id) {
-    Task.findById(req.query.id, function (err, task) {
-      if (err) {
-        res.status(404);
-        console.log('error while queryting the task', err)
-        res.json({ error: "Task doesnt exist" })
-      }
-      res.json(task);
-    });
+  if (req.query.id) {
+    Task.findById(req.query.id)
+      .then(task => task ? res.json(task) : res.status(404).json({ error: "Task doesn't exist" }))
+      .catch(err => res.status(500).json({ error: "Error fetching task" }));
   } else {
-    // get all tasks
-    Task.find(function (err, tasks) {
-      if (err) {
-        res.status(422);
-        res.json({ "error": err });
-      }
-      res.json(tasks);
-    });
-
+    Task.find()
+      .then(tasks => res.json(tasks))
+      .catch(err => res.status(500).json({ error: err.message }));
   }
 };
 
-/**
- * Updates a task
- *
- * @param {*} req
- * @param {*} res
- */
 const taskPatch = (req, res) => {
-  // get task by id
-  if (req.query && req.query.id) {
-    Task.findById(req.query.id, function (err, task) {
-      if (err) {
-        res.status(404);
-        console.log('error while queryting the task', err)
-        res.json({ error: "Task doesnt exist" })
-      }
+  if (!req.query.id) return res.status(400).json({ error: "Missing task ID" });
 
-      // update the task object (patch)
-      task.title = req.body.title ? req.body.title : task.title;
-      task.detail = req.body.detail ? req.body.detail : task.detail;
-      // update the task object (put)
-      // task.title = req.body.title
-      // task.detail = req.body.detail
+  Task.findById(req.query.id)
+    .then(task => {
+      if (!task) return res.status(404).json({ error: "Task doesn't exist" });
 
-      task.save(function (err) {
-        if (err) {
-          res.status(422);
-          console.log('error while saving the task', err)
-          res.json({
-            error: 'There was an error saving the task'
-          });
-        }
-        res.status(200); // OK
-        res.json(task);
-      });
-    });
-  } else {
-    res.status(404);
-    res.json({ error: "Task doesnt exist" })
+      task.title = req.body.title || task.title;
+      task.detail = req.body.detail || task.detail;
+
+      return task.save().then(() => res.status(200).json(task));
+    })
+    .catch(err => res.status(500).json({ error: "Error updating task" }));
+};
+
+const taskDelete = (req, res) => {
+  if (!req.query.id) {
+    return res.status(400).json({ error: "Task ID is required" });
   }
+
+  Task.findByIdAndDelete(req.query.id)
+    .then(task => {
+      if (!task) return res.status(404).json({ error: "Task doesn't exist" });
+      res.status(200).json({ message: "Task successfully deleted" });
+    })
+    .catch(err => res.status(500).json({ error: "Error deleting task" }));
 };
 
 module.exports = {
   taskGet,
   taskPost,
-  taskPatch
-}
+  taskPatch,
+  taskPut: taskPatch,  // Asignación directa para PUT
+  taskDelete
+};
